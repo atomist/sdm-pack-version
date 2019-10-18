@@ -17,7 +17,7 @@
 import { logger } from "@atomist/automation-client";
 import { isGitHubRepoRef } from "@atomist/automation-client/lib/operations/common/GitHubRepoRef";
 import { isTokenCredentials } from "@atomist/automation-client/lib/operations/common/ProjectOperationCredentials";
-import * as Octokit from "@octokit/rest";
+import { createRelease } from "./octokit";
 import { ReleaseCreator } from "./release";
 
 /**
@@ -25,7 +25,7 @@ import { ReleaseCreator } from "./release";
  * project is not a GitHub project or the project credentials do not
  * have a token, it issues are warning and returns success.
  */
-export const githubReleaseCreator: ReleaseCreator = async args => {
+export const GitHubReleaseCreator: ReleaseCreator = async args => {
     const slug = `${args.id.owner}/${args.id.repo}`;
     if (!isGitHubRepoRef(args.id)) {
         const message = `Project ${slug} is neither a GitHub.com nor GHE remote repository`;
@@ -41,11 +41,6 @@ export const githubReleaseCreator: ReleaseCreator = async args => {
     }
 
     try {
-        const octokit = new Octokit({
-            auth: args.credentials.token,
-            baseUrl: args.id.apiBase,
-            userAgent: "@atomist/sdm-pack-version 0.1.0",
-        });
         let changelog: string | undefined;
         for (const ch of ["CHANGELOG.md", "CHANGELOG", "ChangeLog", "Changelog", "changelog"]) {
             if (await args.project.hasFile(ch)) {
@@ -53,14 +48,14 @@ export const githubReleaseCreator: ReleaseCreator = async args => {
                 break;
             }
         }
-        await octokit.repos.createRelease({
+        await createRelease({
+            auth: args.credentials.token,
+            baseUrl: args.id.apiBase,
             owner: args.id.owner,
             repo: args.id.repo,
-            tag_name: args.releaseVersion,
-            target_commitish: args.goalEvent.sha,
-            name: `Release ${args.releaseVersion}`,
-            body: (changelog) ? `See [CHANGELOG](${changelog}) for details.` : undefined,
-            prerelease: args.releaseVersion.includes("-"),
+            version: args.releaseVersion,
+            sha: args.goalEvent.sha,
+            changelog,
         });
         const message = `Created release ${args.releaseVersion} for ${slug}`;
         args.log.write(message);

@@ -19,7 +19,11 @@ export {
     FileVersionIncrementer,
     HasVersionFile,
 } from "./lib/file";
-export { GitHubReleaseCreator } from "./lib/github";
+export {
+    GitHubPushTest,
+    GitHubReleaseCreator,
+    GitHubReleaseRegistration,
+} from "./lib/github";
 export {
     IncrementVersion,
     IncrementVersionRegistration,

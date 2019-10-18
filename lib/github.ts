@@ -17,8 +17,15 @@
 import { logger } from "@atomist/automation-client";
 import { isGitHubRepoRef } from "@atomist/automation-client/lib/operations/common/GitHubRepoRef";
 import { isTokenCredentials } from "@atomist/automation-client/lib/operations/common/ProjectOperationCredentials";
+import {
+    DefaultGoalNameGenerator,
+    PushTest,
+} from "@atomist/sdm";
 import { createRelease } from "./octokit";
-import { ReleaseCreator } from "./release";
+import {
+    ReleaseCreator,
+    ReleaseRegistration,
+} from "./release";
 
 /**
  * Create a GitHub release for GitHub.com or GHE projects.  If the
@@ -66,4 +73,22 @@ export const GitHubReleaseCreator: ReleaseCreator = async args => {
         args.log.write(message);
         return { code: 1, message };
     }
+};
+
+/**
+ * Push test that returns true if the push was to a GitHub.com or GHE
+ * remote repository.
+ */
+export const GitHubPushTest: PushTest = {
+    name: "GitHubPushTest",
+    mapping: async pli => isGitHubRepoRef(pli.id),
+};
+
+/**
+ * Release registration for GitHub release creator implementation.
+ */
+export const GitHubReleaseRegistration: ReleaseRegistration = {
+    name: DefaultGoalNameGenerator.generateName("github-release"),
+    releaseCreator: GitHubReleaseCreator,
+    pushTest: GitHubPushTest,
 };

@@ -1,10 +1,11 @@
 {
   "name": "@atomist/sdm-pack-version",
   "version": "0.1.0",
-  "description": "my new project",
+  "description": "Software delivery machine exptension pack for version management",
   "author": {
-    "name": "David Dooling",
-    "email": "david@atomist.com"
+    "name": "Atomist",
+    "email": "support@atomist.com",
+    "url": "https://atomist.com/"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/sdm-pack-version#readme",
@@ -23,7 +24,11 @@
   ],
   "main": "./index.js",
   "types": "./index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@octokit/rest": "^16.33.1",
+    "@types/semver": "^6.0.2",
+    "semver": "^6.3.0"
+  },
   "peerDependencies": {
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.7.0",
@@ -32,7 +37,7 @@
   "devDependencies": {
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.7.0",
-    "@atomist/sdm-core": "^1.7.0",
+    "@atomist/sdm-core": "1.8.0-git-tag.20191017124105",
     "@types/mocha": "^5.2.7",
     "@types/power-assert": "^1.5.0",
     "espower-typescript": "^9.0.2",
@@ -44,7 +49,7 @@
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "typedoc": "^0.15.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.4"
   },
   "directories": {
     "test": "test"

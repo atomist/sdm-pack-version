@@ -14,4 +14,22 @@
  * limitations under the License.
  */
 
-export { SeedSupport } from "./lib/seed";
+export {
+    FileVersionerRegistration,
+    FileVersionIncrementer,
+    HasVersionFile,
+} from "./lib/file";
+export {
+    IncrementVersion,
+    IncrementVersionRegistration,
+    VersionIncrementer,
+    VersionIncrementerArguments,
+} from "./lib/increment";
+export {
+    IsReleaseCommit,
+    Release,
+    ReleaseRegistration,
+    ReleaseCreator,
+    ReleaseCreatorArguments,
+} from "./lib/release";
+export { VersionSupport } from "./lib/version";

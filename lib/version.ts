@@ -19,7 +19,10 @@ import {
     metadata,
 } from "@atomist/sdm";
 
-export const SeedSupport: ExtensionPack = {
+/**
+ * Currently this extension pack does not alter the SDM.
+ */
+export const VersionSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
         return sdm;

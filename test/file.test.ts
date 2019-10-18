@@ -173,6 +173,7 @@ describe("file", () => {
             const l: any = { write: () => { } };
             const a: any = {
                 currentVersion: "1.2.3",
+                id: p.id,
                 increment: "patch",
                 log: l,
                 project: p,
@@ -188,6 +189,7 @@ describe("file", () => {
             const l: any = { write: () => { } };
             const a: any = {
                 currentVersion: "3.2.1",
+                id: p.id,
                 increment: "minor",
                 log: l,
                 project: p,
@@ -203,6 +205,7 @@ describe("file", () => {
             const l: any = { write: () => { } };
             const a: any = {
                 currentVersion: "3.2.1",
+                id: p.id,
                 increment: "patch",
                 log: l,
                 project: p,

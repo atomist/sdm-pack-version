@@ -19,6 +19,7 @@ import { isGitHubRepoRef } from "@atomist/automation-client/lib/operations/commo
 import { isTokenCredentials } from "@atomist/automation-client/lib/operations/common/ProjectOperationCredentials";
 import {
     DefaultGoalNameGenerator,
+    LogSuppressor,
     PushTest,
 } from "@atomist/sdm";
 import { createRelease } from "./octokit";
@@ -88,7 +89,8 @@ export const GitHubPushTest: PushTest = {
  * Release registration for GitHub release creator implementation.
  */
 export const GitHubReleaseRegistration: ReleaseRegistration = {
+    logInterpreter: LogSuppressor,
     name: DefaultGoalNameGenerator.generateName("github-release"),
-    releaseCreator: GitHubReleaseCreator,
     pushTest: GitHubPushTest,
+    releaseCreator: GitHubReleaseCreator,
 };

@@ -16,16 +16,18 @@
 
 import { Project } from "@atomist/automation-client";
 import {
+    DefaultGoalNameGenerator,
     LogSuppressor,
     ProgressLog,
     PushTest,
-    SdmGoalEvent,
 } from "@atomist/sdm";
 import {
+    ProjectVersioner,
     ProjectVersionerRegistration,
 } from "@atomist/sdm-core";
 import * as semver from "semver";
 import {
+    IncrementVersionRegistration,
     VersionIncrementer,
 } from "./increment";
 import { addBranchPreRelease } from "./semver";
@@ -33,19 +35,14 @@ import { addBranchPreRelease } from "./semver";
 /**
  * Version projects based on the value in a file, the path to which is
  * governed by [[versionFilePath]].
- *
- * @param goalEvent SDM goal event triggering versioning
- * @param p Project associated with SDM goal event
- * @param log Progress log to write information to
- * @return Prerelease semantic version including branch if push was not to default branch, see [[addBranchPreRelease]]
  */
-export async function fileVersioner(goalEvent: SdmGoalEvent, p: Project, log: ProgressLog): Promise<string> {
-    const baseVersion = await readVersionFile(p, log);
+export const FileVersioner: ProjectVersioner = async (goalEvent, project, log) => {
+    const baseVersion = await readVersionFile(project, log);
     log.write(`Using base version '${baseVersion}'`);
     const prereleaseVersion = addBranchPreRelease(baseVersion, goalEvent);
     log.write(`Calculated pre-release version '${prereleaseVersion}'`);
     return prereleaseVersion;
-}
+};
 
 /**
  * Push test indicating if project has either a `.version` or
@@ -60,10 +57,10 @@ export const HasVersionFile: PushTest = {
  * Versioner function registration for the [[Version]] goal.
  */
 export const FileVersionerRegistration: ProjectVersionerRegistration = {
-    name: "file-versioner",
-    versioner: fileVersioner,
     logInterpreter: LogSuppressor,
+    name: DefaultGoalNameGenerator.generateName("file-versioner"),
     pushTest: HasVersionFile,
+    versioner: FileVersioner,
 };
 
 /**
@@ -156,4 +153,14 @@ export const FileVersionIncrementer: VersionIncrementer = async args => {
         args.log.write(message);
         return { code: 1, message };
     }
+};
+
+/**
+ * Increment version registration for [[FileVersionIncrementer]].
+ */
+export const FileVersionIncrementerRegistration: IncrementVersionRegistration = {
+    logInterpreter: LogSuppressor,
+    name: DefaultGoalNameGenerator.generateName("file-version-incrementer"),
+    pushTest: HasVersionFile,
+    versionIncrementer: FileVersionIncrementer,
 };

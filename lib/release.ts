@@ -29,6 +29,7 @@ import {
     getGoalDefinitionFrom,
     Goal,
     GoalInvocation,
+    ImplementationRegistration,
     ProgressLog,
     PushTest,
     SdmGoalEvent,
@@ -64,13 +65,9 @@ export type ReleaseCreator = (args: ReleaseCreatorArguments) => Promise<ExecuteG
 /**
  * [[IncrementVersion]] fulfillment options.
  */
-export interface ReleaseRegistration {
+export interface ReleaseRegistration extends Partial<ImplementationRegistration> {
     /** Function capable of creating a release. */
     releaseCreator: ReleaseCreator;
-    /** Name for this registration. */
-    name?: string;
-    /** Push test for this fulfillment. */
-    pushTest?: PushTest;
 }
 
 /**

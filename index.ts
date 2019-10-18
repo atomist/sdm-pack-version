@@ -15,8 +15,10 @@
  */
 
 export {
+    FileVersioner,
     FileVersionerRegistration,
     FileVersionIncrementer,
+    FileVersionIncrementerRegistration,
     HasVersionFile,
 } from "./lib/file";
 export {

@@ -28,8 +28,8 @@ import {
     getGoalDefinitionFrom,
     Goal,
     GoalInvocation,
+    ImplementationRegistration,
     ProgressLog,
-    PushTest,
     SdmGoalEvent,
     spawnLog,
 } from "@atomist/sdm";
@@ -73,13 +73,9 @@ export type VersionIncrementer = (args: VersionIncrementerArguments) => Promise<
 /**
  * [[IncrementVersion]] fulfillment options.
  */
-export interface IncrementVersionRegistration {
+export interface IncrementVersionRegistration extends Partial<ImplementationRegistration> {
     /** Function capable of incrementing version. */
     versionIncrementer: VersionIncrementer;
-    /** Name for this registration. */
-    name?: string;
-    /** Push test for this fulfillment. */
-    pushTest?: PushTest;
 }
 
 /**

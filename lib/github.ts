@@ -58,7 +58,7 @@ export const GitHubReleaseCreator: ReleaseCreator = async args => {
         }
         await createRelease({
             auth: args.credentials.token,
-            baseUrl: args.id.apiBase,
+            baseUrl: args.id.scheme + args.id.apiBase,
             owner: args.id.owner,
             repo: args.id.repo,
             version: args.releaseVersion,

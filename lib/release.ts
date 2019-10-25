@@ -75,14 +75,12 @@ export interface ReleaseRegistration extends Partial<ImplementationRegistration>
  */
 export class Release extends FulfillableGoal {
 
-    constructor(goalDetailsOrUniqueName: FulfillableGoalDetails | string = DefaultGoalNameGenerator.generateName("release"),
-                ...dependsOn: Goal[]) {
-
+    constructor(detailsOrUniqueName: FulfillableGoalDetails | string = DefaultGoalNameGenerator.generateName("release"), ...dependsOn: Goal[]) {
         super({
             workingDescription: "Releasing",
             completedDescription: "Released",
             failedDescription: "Releasing failure",
-            ...getGoalDefinitionFrom(goalDetailsOrUniqueName, DefaultGoalNameGenerator.generateName("release")),
+            ...getGoalDefinitionFrom(detailsOrUniqueName, DefaultGoalNameGenerator.generateName("release")),
             displayName: "release",
         }, ...dependsOn);
     }
@@ -151,8 +149,9 @@ export function executeRelease(releaseCreator: ReleaseCreator): ExecuteGoal {
             }
             const releaseVersion = releaseLikeVersion(version, gi);
             progressLog.write(`Creating release ${releaseVersion} for ${slug}`);
+            let releaseResult: ExecuteGoalResult;
             try {
-                const releaseResult = await releaseCreator({
+                releaseResult = await releaseCreator({
                     credentials,
                     goalEvent: gi.goalEvent,
                     id,
@@ -160,18 +159,16 @@ export function executeRelease(releaseCreator: ReleaseCreator): ExecuteGoal {
                     project: p,
                     releaseVersion,
                 });
-                if (releaseResult.code) {
-                    throw new Error(releaseResult.message || "release creator failed");
-                }
             } catch (e) {
-                const msg = `Failed create release for ${slug}: ${e.message}`;
+                const msg = `Failed to create release for ${slug}: ${e.message}`;
                 logger.error(msg);
                 progressLog.write(msg);
                 return { code: 1, msg };
             }
-            const message = `Created release ${releaseVersion} for ${slug}`;
-            progressLog.write(message);
-            return { code: 0, message };
+            releaseResult.message = releaseResult.message ||
+                ((releaseResult.code ? "Failed to create" : "Created") + ` release ${releaseVersion} for ${slug}`);
+            progressLog.write(releaseResult.message);
+            return releaseResult;
         });
     };
 }

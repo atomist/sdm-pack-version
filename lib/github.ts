@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
+import {
+    GitHubRepoRef,
+    logger,
+} from "@atomist/automation-client";
 import { isGitHubRepoRef } from "@atomist/automation-client/lib/operations/common/GitHubRepoRef";
 import { isTokenCredentials } from "@atomist/automation-client/lib/operations/common/ProjectOperationCredentials";
 import {
@@ -65,11 +68,12 @@ export const GitHubReleaseCreator: ReleaseCreator = async args => {
             sha: args.goalEvent.sha,
             changelog,
         });
-        const message = `Created release ${args.releaseVersion} for ${slug}`;
+        const message = `Created GitHub release ${args.releaseVersion} for ${slug}`;
         args.log.write(message);
-        return { code: 0, message };
+        const externalUrls = [{ label: args.releaseVersion, url: releaseUrl(args.id, args.releaseVersion) }];
+        return { code: 0, message, externalUrls };
     } catch (e) {
-        const message = `Failed to create release ${args.releaseVersion} for project ${slug}: ${e.message}`;
+        const message = `Failed to create GitHub release ${args.releaseVersion} for project ${slug}: ${e.message}`;
         logger.warn(message);
         args.log.write(message);
         return { code: 1, message };
@@ -94,3 +98,7 @@ export const GitHubReleaseRegistration: ReleaseRegistration = {
     pushTest: GitHubPushTest,
     releaseCreator: GitHubReleaseCreator,
 };
+
+function releaseUrl(id: GitHubRepoRef, version: string): string {
+    return `${id.scheme}${id.remoteBase}/${id.owner}/${id.repo}/releases/tag/${version}`;
+}

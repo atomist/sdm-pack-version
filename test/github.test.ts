@@ -105,6 +105,7 @@ describe("github", () => {
                     apiBase: "api.github.com",
                     kind: "github",
                     owner: "KendrickLamar",
+                    remoteBase: "github.com",
                     repo: "DAMN.",
                     scheme: "https://",
                     setUserConfig: async () => { },
@@ -125,9 +126,13 @@ describe("github", () => {
             }
             Object.defineProperty(octokit, "createRelease", { value: fake });
             const r = await GitHubReleaseCreator(a);
-            assert(r.code === 0);
-            assert(r.message === "Created release 2.0.17 for KendrickLamar/DAMN.");
             assert(createdRelease, "failed to create release");
+            const e = {
+                code: 0,
+                message: "Created GitHub release 2.0.17 for KendrickLamar/DAMN.",
+                externalUrls: [{ label: "2.0.17", url: "https://github.com/KendrickLamar/DAMN./releases/tag/2.0.17" }],
+            };
+            assert.deepStrictEqual(r, e);
         });
 
         it("successfully creates release with changelog", async () => {
@@ -141,6 +146,7 @@ describe("github", () => {
                     kind: "github",
                     owner: "KendrickLamar",
                     repo: "DAMN.",
+                    remoteBase: "github.com",
                     scheme: "https://",
                     setUserConfig: async () => { },
                 },
@@ -160,9 +166,13 @@ describe("github", () => {
             }
             Object.defineProperty(octokit, "createRelease", { value: fake });
             const r = await GitHubReleaseCreator(a);
-            assert(r.code === 0);
-            assert(r.message === "Created release 2.0.17 for KendrickLamar/DAMN.");
             assert(createdRelease, "failed to create release");
+            const e = {
+                code: 0,
+                message: "Created GitHub release 2.0.17 for KendrickLamar/DAMN.",
+                externalUrls: [{ label: "2.0.17", url: "https://github.com/KendrickLamar/DAMN./releases/tag/2.0.17" }],
+            };
+            assert.deepStrictEqual(r, e);
         });
 
     });

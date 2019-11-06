@@ -149,7 +149,7 @@ export const FileVersionIncrementer: VersionIncrementer = async args => {
         args.log.write(message);
         return { code: 0, message };
     } catch (e) {
-        const message = `Failed to increment ${args.increment} version in ${slug}`;
+        const message = `Failed to increment ${args.increment} version in ${slug}: ${e.message}`;
         args.log.write(message);
         return { code: 1, message };
     }

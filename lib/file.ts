@@ -138,7 +138,7 @@ export const FileVersionIncrementer: VersionIncrementer = async args => {
             args.log.write(msg);
             return { code: 1, message: msg };
         }
-        const newVersion = semver.inc(currentVersion, args.increment);
+        const newVersion = semver.inc(args.currentVersion, args.increment);
         if (!newVersion || newVersion === currentVersion) {
             const msg = `Failed to increment ${args.increment} version '${currentVersion}' in ${slug}`;
             args.log.write(msg);

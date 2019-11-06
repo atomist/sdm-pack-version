@@ -218,6 +218,22 @@ describe("file", () => {
             assert(v === "3.3.0\n");
         });
 
+        it("increments major version creates .version", async () => {
+            const p = InMemoryProject.of();
+            const l: any = { write: () => { } };
+            const a: any = {
+                currentVersion: "1.2.3",
+                id: p.id,
+                increment: "major",
+                log: l,
+                project: p,
+            };
+            const r = await FileVersionIncrementer(a);
+            assert(r.code === 0);
+            const v = await (await p.getFile(".version")).getContent();
+            assert(v === "2.0.0\n");
+        });
+
     });
 
 });

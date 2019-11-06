@@ -145,7 +145,7 @@ export const FileVersionIncrementer: VersionIncrementer = async args => {
             return { code: 1, message: msg };
         }
         await writeVersionFile(args.project, args.log, newVersion);
-        const message = `Incremented ${args.increment} version in ${slug}: ${currentVersion} => ${newVersion}`;
+        const message = `Incremented ${args.increment} version in ${slug}: ${args.currentVersion} => ${newVersion}`;
         args.log.write(message);
         return { code: 0, message };
     } catch (e) {

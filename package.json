@@ -1,6 +1,6 @@
 {
   "name": "@atomist/sdm-pack-version",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Software delivery machine exptension pack for version management",
   "author": {
     "name": "Atomist",
